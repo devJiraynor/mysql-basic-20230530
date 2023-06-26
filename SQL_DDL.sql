@@ -12,14 +12,14 @@ USE sample_database;
 
 # 테이블 생성
 CREATE TABLE sample_table (
-	column1 INT,			# INT : 정수
-    column2 DOUBLE,			# DOUBLE : 실수
-    column3 BOOLEAN,		# BOOLEAN : 논리 (0: false, 1: true)
-    column4 VARCHAR(10),	# VARCHAR(길이) : 길이를 제한한 문자열
-    column5 TEXT,			# TEXT : 길이를 제한하지 않은 문자열
-    column6 DATE,			# DATE : 날짜
-    column7 TIME,			# TIME : 시간
-    column8 DATETIME		# DATETIME : 날짜 및 시간
+	column1 INT AUTO_INCREMENT PRIMARY KEY,	# INT : 정수
+    column2 DOUBLE,							# DOUBLE : 실수
+    column3 BOOLEAN,						# BOOLEAN : 논리 (0: false, 1: true)
+    column4 VARCHAR(10),					# VARCHAR(길이) : 길이를 제한한 문자열
+    column5 TEXT,							# TEXT : 길이를 제한하지 않은 문자열
+    column6 DATE,							# DATE : 날짜
+    column7 TIME,							# TIME : 시간
+    column8 DATETIME						# DATETIME : 날짜 및 시간
 );
 
 # ALTER
@@ -47,7 +47,7 @@ DROP TABLE sample_table;
 # DROP TABLE, TRUNCATE TABLE, DELETE TABLE
 # 테이블과 관련된 삭제 명령어
 # DROP (DDL) : 정의와 관련된 작업 -> 테이블의 정의 자체 삭제
-# TRUNCATE (DML) : 데이터와 관련된 작업 -> 모든 데이터 삭제 (테이블을 초기화 - 인덱스도 초기화)
+# TRUNCATE (DDL) : 데이터와 관련된 작업 -> 모든 데이터 삭제 (테이블을 초기화 - 인덱스도 초기화)
 # DELETE (DML) : 데이터와 관련된 작업 -> 모든 데이터 삭제 (데이터만 삭제 - 인덱스 등은 삭제 안함)
 
 # 데이터베이스 삭제
