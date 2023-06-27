@@ -34,5 +34,96 @@ UPDATE unique_table SET unique_column = 2;
 SELECT * FROM unique_table WHERE column1 = 1;
 SELECT * FROM unique_table WHERE unique_column = 2;
 
+# Candidate key (후보키)
+# 각 레코드를 구분할 수 있는 키로 중복을 허용하지 않고 필수로 값을 가지고 있어야 함
+CREATE TABLE candidate_table (
+	candidate_column1 INT NOT NULL UNIQUE,
+    candidate_column2 INT NOT NULL UNIQUE,
+    column1 INT
+);
 
+INSERT INTO candidate_table VALUES (1, 1, 1);
+INSERT INTO candidate_table VALUES (2, 22, 1);
 
+SELECT * FROM candidate_table;
+
+# PRIMARY KEY (기본키)
+# PRIMARY KEY 제약 조건이 지정되어 있는 컬럼은 해당 레코드를 유일하게 식별하는 컬럼이 됨
+# PRIMARY KEY는 후보키 중 선택된 하나의 컬럼이 PRIMARY KEY가 됨
+# PRIMARY KEY 제약 조건이 지정되어 있는 컬럼은 NOT NULL, UNIQUE 제약조건을 포함하고 있음
+CREATE TABLE primary_table_1 (
+	primary_column INT PRIMARY KEY,
+    column1 INT
+);
+
+INSERT INTO primary_table_1 (column1) VALUES (1);
+INSERT INTO primary_table_1 VALUES (1, 1);
+INSERT INTO primary_table_1 VALUES (2, 1);
+
+UPDATE primary_table_1 SET primary_column = null;
+UPDATE primary_table_1 SET primary_column = 1;
+
+# CONSTRAINT 명령어를 이용한 제약조건 지정
+# [CONSTRAINT 제약조건명] 제약조건 (column1, ...)
+CREATE TABLE primary_table_2 (
+	primary_column INT,
+    column1 INT,
+    CONSTRAINT primary_table_2_pk
+    PRIMARY KEY (primary_column)
+);
+
+# CHECK
+# CHECK 제약조건이 지정되어 있는 컬럼에는 삽입 및 수정 작업시에
+# 데이터의 유효성을 검증함
+CREATE TABLE check_table (
+	check_column INT CHECK (check_column < 10),
+    column_1 INT
+);
+
+INSERT INTO check_table VALUES (10, 10);
+INSERT INTO check_table VALUES (1, 10);
+
+UPDATE check_table SET check_column = 10;
+
+# DEFAULT
+# DEFAULT 제약조건이 지정되어있는 컬럼에 삽입 작업시에
+# 값을 지정하지않으면 (null이 지정될때) 삽입될 기본값을 명시함
+CREATE TABLE default_table (
+	default_column INT DEFAULT 10,
+    column_1 INT
+);
+
+SELECT * FROM default_table;
+
+INSERT INTO default_table (column_1) VALUES (1);
+INSERT INTO default_table VALUES (20, 1);
+
+UPDATE default_table SET default_column = null;
+
+# FOREIGN KEY
+# FOREIGN KEY 제약조건이 지정되어있는 컬럼은 외부 테이블의 PRIMARY KEY와 연결되어 있음을 나타냄
+# FOREIGN KEY 제약조건으로 테이블간의 관계를 지어줌
+
+# CONSTAINT 제약조건명 FOREIGN KEY (외래키로 지정할 컬럼)
+# REFERENCES 참조할테이블명 (참조할컬럼명)
+CREATE TABLE super_table (
+	primary_column INT PRIMARY KEY,
+    column_1 INT
+);
+
+CREATE TABLE sub_table (
+	column_1 INT,
+    column_2 INT,
+    CONSTRAINT sub_table_fk
+    FOREIGN KEY (column_2) 
+    REFERENCES super_table (primary_column)
+);
+
+SELECT * FROM super_table;
+
+# FOREIGN KEY 제약조건이 지정되어있는 컬럼의 값은
+# 참조하고있는 테이블의 컬럼에 있는 데이터만 지정할 수 있음
+INSERT INTO super_table VALUES (1, 1);
+INSERT INTO sub_table VALUES (1, 2);
+
+UPDATE sub_table SET column_2 = 10;
