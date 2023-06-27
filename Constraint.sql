@@ -104,6 +104,12 @@ UPDATE default_table SET default_column = null;
 # FOREIGN KEY 제약조건이 지정되어있는 컬럼은 외부 테이블의 PRIMARY KEY와 연결되어 있음을 나타냄
 # FOREIGN KEY 제약조건으로 테이블간의 관계를 지어줌
 
+# 1. 만약 테이블을 삭제하려고 할때 만약 해당 테이블을 참조하고 있는 테이블이 있다면
+#    삭제할 수 없음
+# 2. 특정 컬럼에 참조제약조건을 지정하려한다면 참조하는 컬럼의 데이터타입과 일치해야함
+# 3. 피참조 테이블의 수정 및 삭제 작업 시에 해당 컬럼의 값을 참조하고 있는 테이블이 있다면
+#    수정 및 삭제 작업이 실패
+
 # CONSTAINT 제약조건명 FOREIGN KEY (외래키로 지정할 컬럼)
 # REFERENCES 참조할테이블명 (참조할컬럼명)
 CREATE TABLE super_table (
@@ -124,6 +130,46 @@ SELECT * FROM super_table;
 # FOREIGN KEY 제약조건이 지정되어있는 컬럼의 값은
 # 참조하고있는 테이블의 컬럼에 있는 데이터만 지정할 수 있음
 INSERT INTO super_table VALUES (1, 1);
-INSERT INTO sub_table VALUES (1, 2);
+INSERT INTO super_table VALUES (2, 2);
+INSERT INTO super_table VALUES (3, 3);
+INSERT INTO sub_table VALUES (1, 1);
+
+DELETE FROM super_table WHERE primary_column = 2;
+UPDATE super_table SET primary_column = 5 WHERE primary_column = 2;
 
 UPDATE sub_table SET column_2 = 10;
+
+DROP TABLE sub_table;
+
+# 3 제한에 대한 해결 방안
+# ON UPDATE, ON DELETE
+# ON UPDATE : 참조하고 있는 데이터가 수정이 됐을 때의 작업
+# ON DELETE : 참조하고 있는 데이터가 삭제가 됐을 때의 작업
+
+# CASCADE : 참조하고 있는 데이터가 수정 또는 삭제가 됐을 때 
+#           참조하는 레코드에서도 삭제 및 수정이 이뤄짐
+# SET NULL : 참조하고 있는 데이터가 수정 또는 삭제가 됐을 때
+#            참조하는 레코드의 해당 컬럼 값을 null로 지정
+# RESTRICT : 참조하고 있는 데이터에서 수정 또는 삭제가 불가능하게 지정
+
+CREATE TABLE sub_table_2 (
+	column_1 INT,
+    column_2 INT,
+    CONSTRAINT sub_table_2_fk
+    FOREIGN KEY (column_2) 
+    REFERENCES super_table (primary_column)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+);
+
+SELECT * FROM sub_table_2;
+
+INSERT INTO sub_table_2 VALUES (3, 3);
+
+UPDATE super_table 
+SET primary_column = 10 
+WHERE primary_column = 3;
+
+DELETE FROM super_table WHERE primary_column = 10;
+
+SELECT * FROM super_table;
