@@ -12,7 +12,7 @@ USE sample_database;
 
 # 테이블 생성
 CREATE TABLE sample_table (
-	column1 INT AUTO_INCREMENT PRIMARY KEY,	# INT : 정수
+	column1 INT,							# INT : 정수
     column2 DOUBLE,							# DOUBLE : 실수
     column3 BOOLEAN,						# BOOLEAN : 논리 (0: false, 1: true)
     column4 VARCHAR(10),					# VARCHAR(길이) : 길이를 제한한 문자열

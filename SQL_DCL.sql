@@ -19,12 +19,21 @@ GRANT SELECT
 ON sample_database.namgu 
 TO 'developer1'@'localhost';
 
-GRANT UPDATE
+GRANT UPDATE, SELECT
 ON *.*
 TO 'developer1'@'localhost';
 
+# REVOKE
+# 사용자에게 특정 데이터베이스의 특정 테이블에 대하여
+# 특정 작업을 수행할 권한을 취소하는 명령어
 
+# REVOKE privilege1, ...
+# ON 데이터베이스명.테이블명
+# FROM '유저이름'@'호스트명';
 
+REVOKE SELECT 
+ON *.*
+FROM 'developer1'@'localhost';
 
 
 
